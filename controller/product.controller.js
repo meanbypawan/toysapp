@@ -37,3 +37,13 @@ export const save = (request, response, next) => {
             });
     }
 }
+export const getProductByCategoryId = async (request,response,next)=>{
+   let cid = request.params.categoryId;
+   let products = await Product.find({categoryId: cid});    
+   let categories = await Category.find();
+   return response.render("admin/user-product.ejs",
+    {   currentUser: request.session,
+        categoryList: categories, 
+        productList: products
+    });  
+}

@@ -7,6 +7,8 @@ import path from 'path';
 import {fileURLToPath} from 'url';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
+import session from 'express-session';
+
 const app = express();
 
 app.set("view engine","ejs");
@@ -16,6 +18,7 @@ const __dirname = path.dirname(__filename);
 
 const publicPath = path.join(__dirname,'public');
 app.use(express.static(publicPath));
+app.use(session({secret: 'dadereccvdreeer'}));
 
 // http://loalhost:3000/category/list --> GET
 mongoose.set('strictQuery', true);
@@ -28,7 +31,7 @@ mongoose.connect('mongodb+srv://meanstack:mean123@cluster0.dkefj.mongodb.net/toy
         app.use(bodyParser.urlencoded({extended: true}));
         
         app.use("/",adminRouter);
-        
+          
         app.use("/category",categoryRouter);
         app.use("/product",productRouter);
         app.use("/user",userRouter);
