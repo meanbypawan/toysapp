@@ -26,6 +26,11 @@
                     </a>
                 </li>
                <%}else{%>
+                <li class="tm-nav-item">
+                    <a href="/cart/cart-item" class="tm-nav-link">
+                       View cart
+                    </a>
+                </li>
                   <%categoryList.forEach(category=>{%>
                     <li class="tm-nav-item">
                         <a href="/product/<%=category._id%>" class="tm-nav-link">

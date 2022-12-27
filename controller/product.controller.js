@@ -44,6 +44,7 @@ export const getProductByCategoryId = async (request,response,next)=>{
    return response.render("admin/user-product.ejs",
     {   currentUser: request.session,
         categoryList: categories, 
-        productList: products
+        productList: products,
+        message: ''
     });  
 }

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>User Dashboard</title>
+    <%- include('_bootstrap.ejs')%>
+</head>
+<body>
+	<%- include('_user-header.ejs')%>
+    <div class="container">
+        <main class="tm-main">
+            <table class="table">
+                <thead>
+                  <tr>  
+                    <th>S.no</th>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>QTY</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <%cartItemList.forEach((item,index)=>{%>
+                     <tr>
+                       <td><%=index+1%></td>
+                       <td>
+                         <img src="/images/<%=item.productImage%>" width="100px" hegith="100px"/>
+                       </td>
+                       <td><%=item.productName%></td>
+                       <td id="price<%=index%>"><%=item.productPrice%></td>
+                       <td>
+                        <button onclick="incrementQuantity('<%=index%>')" class="btn btn-sm btn-success">+</button>
+                        <span id="qty<%=index%>" class="btn">1</span>
+                        <button onclick="decrementQuantity('<%=index%>')" class="btn btn-sm btn-info">-</button>
+                       </td>
+                     </tr>    
+                    <%})%>
+                </tbody>
+            </table> 
+            <div class="row p-3">
+                <div class="col-md-10 bg-danger">
+                    <span class="text-white">Total</span>
+                </div>
+                <div class="col-md-2 bg-primary">
+                    <span id="total" class="text-white"></span>
+                </div>
+            </div>
+            <div class="row text-center">
+               <div class="col-md-12"> 
+                <button class="btn btn-outline-success">Place Order</button>
+               </div>
+            </div>
+        </main>    
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/templatemo-script.js"></script>
+    <script>
+        function incrementQuantity(index){
+           var cartItem =  localStorage.getItem('cart-item');
+           cartItem = JSON.parse(cartItem);
+           var item = cartItem.itemList[index];
+           item.qty++;
+           var totalPrice = item.productPrice*item.qty;
+           cartItem.itemList[index] = item;
+           document.getElementById("qty"+index).innerHTML = ""+item.qty;
+           document.getElementById("price"+index).innerHTML = ""+(totalPrice);
+           localStorage.setItem("cart-item",JSON.stringify(cartItem));
+           var total = 0;
+           for(var i = 0; i<cartItem.itemList.length; i++){
+            total = total + (cartItem.itemList[i].qty * cartItem.itemList[i].productPrice);
+           }
+           document.getElementById("total").innerHTML = ""+total;
+        }
+        function decrementQuantity(index){
+           var cartItem =  localStorage.getItem('cart-item');
+           cartItem = JSON.parse(cartItem);
+           var item = cartItem.itemList[index];
+           if(item.qty>1){
+             item.qty--;
+             var totalPrice = item.productPrice*item.qty;
+             cartItem.itemList[index] = item;
+             document.getElementById("qty"+index).innerHTML = ""+item.qty;
+             document.getElementById("price"+index).innerHTML = ""+(totalPrice);
+             localStorage.setItem("cart-item",JSON.stringify(cartItem));
+           }
+           var total = 0;
+           for(var i = 0; i<cartItem.itemList.length; i++){
+            total = total + (cartItem.itemList[i].qty * cartItem.itemList[i].productPrice);
+           }
+           document.getElementById("total").innerHTML = ""+total;
+        }
+        function loadData(){
+           var xhttp = new XMLHttpRequest();
+           xhttp.open("GET","/cart/load-data",true);
+           xhttp.send();
+           xhttp.onreadystatechange = function(){
+              if(xhttp.readyState == 4){
+                let data = xhttp.responseText;
+                data = JSON.parse(data);
+                localStorage.setItem("cart-item",JSON.stringify(data));
+                var total = 0;
+                for(index = 0; index<data.itemList.length; index++){
+                  total = total + data.itemList[index].productPrice;
+                  document.getElementById("total").innerHTML = ""+total;
+                }
+              }
+           }  
+        }
+        loadData();
+    </script>
+</body>
+</html>

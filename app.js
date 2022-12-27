@@ -8,7 +8,7 @@ import {fileURLToPath} from 'url';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import session from 'express-session';
-
+import cartRouter from './routes/cart.route.js';
 const app = express();
 
 app.set("view engine","ejs");
@@ -36,7 +36,7 @@ mongoose.connect('mongodb+srv://meanstack:mean123@cluster0.dkefj.mongodb.net/toy
         app.use("/product",productRouter);
         app.use("/user",userRouter);
         app.use("/admin",adminRouter);
-        
+        app.use("/cart",cartRouter);
         app.listen(3000,()=>{
             console.log("server started....");
         });
